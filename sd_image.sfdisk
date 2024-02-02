@@ -1,0 +1,7 @@
+label: dos
+label-id: 0x35124a52
+device: sd_image
+unit: sectors
+sector-size: 512
+
+sd_image1 : start=        4096, size=      REPLACE_SIZE, type=c, bootable

@@ -1,0 +1,91 @@
+/******************************************************************
+* Author        : German Mundinger
+* Date          : 2022
+******************************************************************/
+
+/dts-v1/;
+/plugin/;
+
+&am33xx_pinmux {
+    timer4_pin: pinmux_timer4_pin {
+       pinctrl-single,pins = <
+            AM33XX_PADCONF(AM335X_PIN_GPMC_ADVN_ALE, PIN_OUTPUT_PULLUP, MUX_MODE2)    /* gpmc_advn_ale.timer4 */
+		>;
+	};
+	timer7_pin: pinmux_timer7_pin {
+		pinctrl-single,pins = <
+            AM33XX_PADCONF(AM335X_PIN_GPMC_OEN_REN, PIN_OUTPUT_PULLUP, MUX_MODE2)    /* gpmc_oen_ren.timer7 */
+		>;
+	};
+	timer5_pin: pinmux_timer5_pin {
+		pinctrl-single,pins = <
+            AM33XX_PADCONF(AM335X_PIN_GPMC_BEN0_CLE, PIN_OUTPUT_PULLUP, MUX_MODE2)    /* gpmc_be0n_cle.timer5 */
+		>;
+	};
+	infrared_pin: pinmux_infrared_pin {
+		pinctrl-single,pins = <
+            AM33XX_PADCONF(AM335X_PIN_GPMC_AD8, PIN_INPUT, MUX_MODE7)   // GPIO_22 (0[22])
+		>;
+	};
+};
+
+&ocp {
+    infrared_pinmux {
+        compatible = "bone-pinmux-helper";
+        pinctrl-0 = <&infrared_pin>;
+        pinctrl-names = "default";
+        status = "okay";
+    };
+};
+
+
+&{/} {
+    pwm4: dmtimer-pwm@4 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&timer4_pin>;
+
+        compatible = "ti,omap-dmtimer-pwm";
+        #pwm-cells = <3>;
+        ti,timers = <&timer4>;
+        ti,prescaler = <1>;		/* 0 thru 7 */
+        ti,clock-source = <0x00>;	/* timer_sys_ck */
+        //ti,clock-source = <0x01>;	/* timer_32k_ck */
+    };
+    pwm7: dmtimer-pwm@7 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&timer7_pin>;
+
+        compatible = "ti,omap-dmtimer-pwm";
+        #pwm-cells = <3>;
+        ti,timers = <&timer7>;
+        ti,prescaler = <1>;		/* 0 thru 7 */
+        ti,clock-source = <0x00>;	/* timer_sys_ck */
+        //ti,clock-source = <0x01>;	/* timer_32k_ck */
+    };
+    pwm5: dmtimer-pwm@5 {
+        pinctrl-names = "default";
+        pinctrl-0 = <&timer5_pin>;
+
+        compatible = "ti,omap-dmtimer-pwm";
+        #pwm-cells = <3>;
+        ti,timers = <&timer5>;
+        ti,prescaler = <1>;		/* 0 thru 7 */
+        ti,clock-source = <0x00>;	/* timer_sys_ck */
+        //ti,clock-source = <0x01>;	/* timer_32k_ck */
+    };
+};
+
+&tscadc {
+    status = "okay";
+    adc {
+        ti,adc-channels = <3 5>;
+        ti,chan-step-avg = <16 16>;
+        ti,chan-step-opendelay = <152 152>;
+        ti,chan-step-sampledelay = <0 0>;
+    };
+};
+
+// echo 46 >> /sys/class/gpio/export
+// echo out >> /sys/class/gpio/gpio46/direction
+// echo 1 >> /sys/class/gpio/gpio46/value
+

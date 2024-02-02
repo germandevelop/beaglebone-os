@@ -1,0 +1,199 @@
+/******************************************************************
+* Author        : German Mundinger
+* Date          : 2022
+******************************************************************/
+
+dir /var 0755 0 0
+dir /var/log 0755 0 0
+
+dir /root 0700 0 0
+dir /root/.ssh 0700 0 0
+
+
+dir /proc       0755 0 0
+dir /sys        0755 0 0
+dir /tmp        0755 0 0
+dir /mnt        0755 0 0
+dir /dev        0755 0 0
+
+nod /dev/console    0600 0 0 c 5 1
+nod /dev/null       0666 0 0 c 1 3
+nod /dev/zero       0600 0 0 c 1 5
+
+file /init.sd   initramfs/init.sd   0755 0 0
+
+dir /boot               0755 0 0
+dir /boot/dts           0755 0 0
+dir /boot/dts/overlays  0755 0 0
+
+file /boot/dts/overlays/node-B01.dtbo initramfs/boot/dts/overlays/node-B01.dtbo 0644 0 0
+
+dir /etc                                                    0755 0 0
+file /etc/group             initramfs/etc/group             0644 0 0
+file /etc/passwd            initramfs/etc/passwd            0644 0 0
+file /etc/shadow            initramfs/etc/shadow            0644 0 0
+file /etc/inittab           initramfs/etc/inittab           0644 0 0
+file /etc/inittab.sd        initramfs/etc/inittab.sd        0644 0 0
+file /etc/hosts             initramfs/etc/hosts             0644 0 0
+file /etc/emmc.sfdisk       initramfs/etc/emmc.sfdisk       0644 0 0
+file /etc/emmc_flasher.sh   initramfs/etc/emmc_flasher.sh   0755 0 0
+file /etc/profile           initramfs/etc/profile           0755 0 0
+file /etc/logger.sh         initramfs/etc/logger.sh         0755 0 0
+file /etc/update_image.sh   initramfs/etc/update_image.sh   0755 0 0
+
+dir /etc/init.d                                     0755 0 0
+file /etc/init.d/rcS    initramfs/etc/init.d/rcS    0755 0 0
+
+dir /etc/dropbear                                                                           0755 0 0
+file /etc/dropbear/dropbear_ecdsa_host_key  initramfs/etc/dropbear/dropbear_ecdsa_host_key  0600 0 0
+file /etc/dropbear/dropbear_rsa_host_key    initramfs/etc/dropbear/dropbear_rsa_host_key    0600 0 0
+file /etc/dropbear/dropbear_banner          initramfs/etc/dropbear/dropbear_banner          0644 0 0
+
+dir /lib                                                            0755 0 0
+dir /lib/modules                                                    0755 0 0
+file /lib/ld-linux-armhf.so.3   initramfs/lib/ld-linux-armhf.so.3   0755 0 0
+slink /lib/ld-linux.so.3        /lib/ld-linux-armhf.so.3            0777 0 0
+file /lib/libtinfo.so.6.2       initramfs/lib/libtinfo.so.6.2       0755 0 0
+slink /lib/libtinfo.so.6        /lib/libtinfo.so.6.2                0777 0 0
+file /lib/libcom_err.so.2.1     initramfs/lib/libcom_err.so.2.1     0755 0 0
+slink /lib/libcom_err.so.2      /lib/libcom_err.so.2.1              0777 0 0
+file /lib/libe2p.so.2.3         initramfs/lib/libe2p.so.2.3         0755 0 0
+slink /lib/libe2p.so.2          /lib/libe2p.so.2.3                  0777 0 0
+file /lib/libext2fs.so.2.4      initramfs/lib/libext2fs.so.2.4      0755 0 0
+slink /lib/libext2fs.so.2       /lib/libext2fs.so.2.4               0777 0 0
+
+file /lib/modules/ac97_bus.ko                   initramfs/lib/modules/ac97_bus.ko                   0755 0 0
+file /lib/modules/soundcore.ko                  initramfs/lib/modules/soundcore.ko                  0755 0 0
+file /lib/modules/snd.ko                        initramfs/lib/modules/snd.ko                        0755 0 0
+file /lib/modules/snd-timer.ko                  initramfs/lib/modules/snd-timer.ko                  0755 0 0
+file /lib/modules/snd-pcm.ko                    initramfs/lib/modules/snd-pcm.ko                    0755 0 0
+file /lib/modules/snd-pcm-dmaengine.ko          initramfs/lib/modules/snd-pcm-dmaengine.ko          0755 0 0
+file /lib/modules/snd-soc-core.ko               initramfs/lib/modules/snd-soc-core.ko               0755 0 0
+file /lib/modules/snd-soc-ti-edma.ko            initramfs/lib/modules/snd-soc-ti-edma.ko            0755 0 0
+file /lib/modules/snd-soc-ti-sdma.ko            initramfs/lib/modules/snd-soc-ti-sdma.ko            0755 0 0
+file /lib/modules/snd-soc-ti-udma.ko            initramfs/lib/modules/snd-soc-ti-udma.ko            0755 0 0
+file /lib/modules/snd-soc-davinci-mcasp.ko      initramfs/lib/modules/snd-soc-davinci-mcasp.ko      0755 0 0
+file /lib/modules/snd-soc-simple-card-utils.ko  initramfs/lib/modules/snd-soc-simple-card-utils.ko  0755 0 0
+file /lib/modules/snd-soc-simple-card.ko        initramfs/lib/modules/snd-soc-simple-card.ko        0755 0 0
+file /lib/modules/snd-soc-hdmi-codec.ko         initramfs/lib/modules/snd-soc-hdmi-codec.ko         0755 0 0
+
+file /lib/modules/pms7003.ko    initramfs/lib/modules/pms7003.ko    0755 0 0
+file /lib/modules/bmp280.ko     initramfs/lib/modules/bmp280.ko     0755 0 0
+file /lib/modules/bmp280-i2c.ko initramfs/lib/modules/bmp280-i2c.ko 0755 0 0
+
+dir /usr                                                                    0755 0 0
+dir /usr/lib                                                                0755 0 0
+file /usr/lib/libc.so.6             initramfs/usr/lib/libc.so.6             0755 0 0
+file /usr/lib/libpthread.so.0       initramfs/usr/lib/libpthread.so.0       0755 0 0
+file /usr/lib/libm.so.6             initramfs/usr/lib/libm.so.6             0755 0 0
+file /usr/lib/librt.so.1            initramfs/usr/lib/librt.so.1            0755 0 0
+file /usr/lib/libnss_compat.so.2    initramfs/usr/lib/libnss_compat.so.2    0755 0 0
+file /usr/lib/libnss_files.so.2     initramfs/usr/lib/libnss_files.so.2     0755 0 0
+file /usr/lib/libnss_dns.so.2       initramfs/usr/lib/libnss_dns.so.2       0755 0 0
+file /usr/lib/libresolv.so.2        initramfs/usr/lib/libresolv.so.2        0755 0 0
+file /usr/lib/libstdc++.so.6        initramfs/usr/lib/libstdc++.so.6        0755 0 0
+file /usr/lib/libgcc_s.so.1         initramfs/usr/lib/libgcc_s.so.1         0755 0 0
+file /usr/lib/libblkid.so.1.1.0     initramfs/usr/lib/libblkid.so.1.1.0     0755 0 0
+slink /usr/lib/libblkid.so.1        /usr/lib/libblkid.so.1.1.0              0777 0 0
+file /usr/lib/libfdisk.so.1.1.0     initramfs/usr/lib/libfdisk.so.1.1.0     0755 0 0
+slink /usr/lib/libfdisk.so.1        /usr/lib/libfdisk.so.1.1.0              0777 0 0
+file /usr/lib/libsmartcols.so.1.1.0 initramfs/usr/lib/libsmartcols.so.1.1.0 0755 0 0
+slink /usr/lib/libsmartcols.so.1    /usr/lib/libsmartcols.so.1.1.0          0777 0 0
+file /usr/lib/libtic.so.6.2         initramfs/usr/lib/libtic.so.6.2         0755 0 0
+slink /usr/lib/libtic.so.6          /usr/lib/libtic.so.6.2                  0777 0 0
+file /usr/lib/libuuid.so.1.3.0      initramfs/usr/lib/libuuid.so.1.3.0      0755 0 0
+slink /usr/lib/libuuid.so.1         /usr/lib/libuuid.so.1.3.0               0777 0 0
+
+file /usr/lib/libsigc-3.0.so.0.0.0      initramfs/usr/lib/libsigc-3.0.so.0.0.0      0755 0 0
+slink /usr/lib/libsigc-3.0.so.0         /usr/lib/libsigc-3.0.so.0.0.0               0777 0 0
+file /usr/lib/libpng16.so.16.37.0       initramfs/usr/lib/libpng16.so.16.37.0       0755 0 0
+slink /usr/lib/libpng16.so.16           /usr/lib/libpng16.so.16.37.0                0777 0 0
+file /usr/lib/libfreetype.so.6.18.0     initramfs/usr/lib/libfreetype.so.6.18.0     0755 0 0
+slink /usr/lib/libfreetype.so.6         /usr/lib/libfreetype.so.6.18.0              0777 0 0
+file /usr/lib/libfontconfig.so.1.13.0   initramfs/usr/lib/libfontconfig.so.1.13.0   0755 0 0
+slink /usr/lib/libfontconfig.so.1       /usr/lib/libfontconfig.so.1.13.0            0777 0 0
+file /usr/lib/libexpat.so.1.6.11        initramfs/usr/lib/libexpat.so.1.6.11        0755 0 0
+slink /usr/lib/libexpat.so.1            /usr/lib/libexpat.so.1.6.11                 0777 0 0
+file /usr/lib/libcairomm-1.16.so.1.4.0  initramfs/usr/lib/libcairomm-1.16.so.1.4.0  0755 0 0
+slink /usr/lib/libcairomm-1.16.so.1     /usr/lib/libcairomm-1.16.so.1.4.0           0777 0 0
+file /usr/lib/libcairo.so.2.11708.0     initramfs/usr/lib/libcairo.so.2.11708.0     0755 0 0
+slink /usr/lib/libcairo.so.2            /usr/lib/libcairo.so.2.11708.0              0777 0 0
+file /usr/lib/libpixman-1.so.0.42.3     initramfs/usr/lib/libpixman-1.so.0.42.3     0755 0 0
+slink /usr/lib/libpixman-1.so.0         /usr/lib/libpixman-1.so.0.42.3              0777 0 0
+file /usr/lib/libz.so                   initramfs/usr/lib/libz.so                   0755 0 0
+
+file /usr/lib/libffi.so.7.1.0                   initramfs/usr/lib/libffi.so.7.1.0                   0755 0 0
+slink /usr/lib/libffi.so.7                      /usr/lib/libffi.so.7.1.0                            0777 0 0
+file /usr/lib/libfribidi.so.0.4.0               initramfs/usr/lib/libfribidi.so.0.4.0               0755 0 0
+slink /usr/lib/libfribidi.so.0                  /usr/lib/libfribidi.so.0.4.0                        0777 0 0
+file /usr/lib/libgio-2.0.so.0.7400.0            initramfs/usr/lib/libgio-2.0.so.0.7400.0            0755 0 0
+slink /usr/lib/libgio-2.0.so.0                  /usr/lib/libgio-2.0.so.0.7400.0                     0777 0 0
+file /usr/lib/libglib-2.0.so.0.7400.0           initramfs/usr/lib/libglib-2.0.so.0.7400.0           0755 0 0
+slink /usr/lib/libglib-2.0.so.0                 /usr/lib/libglib-2.0.so.0.7400.0                    0777 0 0
+file /usr/lib/libgmodule-2.0.so.0.7400.0        initramfs/usr/lib/libgmodule-2.0.so.0.7400.0        0755 0 0
+slink /usr/lib/libgmodule-2.0.so.0              /usr/lib/libgmodule-2.0.so.0.7400.0                 0777 0 0
+file /usr/lib/libgobject-2.0.so.0.7400.0        initramfs/usr/lib/libgobject-2.0.so.0.7400.0        0755 0 0
+slink /usr/lib/libgobject-2.0.so.0              /usr/lib/libgobject-2.0.so.0.7400.0                 0777 0 0
+file /usr/lib/libharfbuzz.so.0.40000.0          initramfs/usr/lib/libharfbuzz.so.0.40000.0          0755 0 0
+slink /usr/lib/libharfbuzz.so.0                 /usr/lib/libharfbuzz.so.0.40000.0                   0777 0 0
+file /usr/lib/libpango-1.0.so.0.5000.14         initramfs/usr/lib/libpango-1.0.so.0.5000.14         0755 0 0
+slink /usr/lib/libpango-1.0.so.0                /usr/lib/libpango-1.0.so.0.5000.14                  0777 0 0
+file /usr/lib/libpangocairo-1.0.so.0.5000.14    initramfs/usr/lib/libpangocairo-1.0.so.0.5000.14    0755 0 0
+slink /usr/lib/libpangocairo-1.0.so.0           /usr/lib/libpangocairo-1.0.so.0.5000.14             0777 0 0
+file /usr/lib/libpangoft2-1.0.so.0.5000.14      initramfs/usr/lib/libpangoft2-1.0.so.0.5000.14      0755 0 0
+slink /usr/lib/libpangoft2-1.0.so.0             /usr/lib/libpangoft2-1.0.so.0.5000.14               0777 0 0
+file /usr/lib/libpcre2-8.so                     initramfs/usr/lib/libpcre2-8.so                     0755 0 0
+file /usr/lib/libgiomm-2.68.so.1.3.0            initramfs/usr/lib/libgiomm-2.68.so.1.3.0            0755 0 0
+slink /usr/lib/libgiomm-2.68.so.1               /usr/lib/libgiomm-2.68.so.1.3.0                     0777 0 0
+file /usr/lib/libglibmm-2.68.so.1.3.0           initramfs/usr/lib/libglibmm-2.68.so.1.3.0           0755 0 0
+slink /usr/lib/libglibmm-2.68.so.1              /usr/lib/libglibmm-2.68.so.1.3.0                    0777 0 0
+file /usr/lib/libpangomm-2.48.so.1.0.30         initramfs/usr/lib/libpangomm-2.48.so.1.0.30         0755 0 0
+slink /usr/lib/libpangomm-2.48.so.1             /usr/lib/libpangomm-2.48.so.1.0.30                  0777 0 0
+file /usr/lib/libasound.so.2.0.0                initramfs/usr/lib/libasound.so.2.0.0                0755 0 0
+slink /usr/lib/libasound.so.2                   /usr/lib/libasound.so.2.0.0                         0777 0 0
+
+file /usr/lib/libboost_chrono-mt-a32.so.1.81.0      initramfs/usr/lib/libboost_chrono-mt-a32.so.1.81.0      0755 0 0
+file /usr/lib/libboost_thread-mt-a32.so.1.81.0      initramfs/usr/lib/libboost_thread-mt-a32.so.1.81.0      0755 0 0
+file /usr/lib/libboost_filesystem-mt-a32.so.1.81.0  initramfs/usr/lib/libboost_filesystem-mt-a32.so.1.81.0  0755 0 0
+file /usr/lib/libboost_log-mt-a32.so.1.81.0         initramfs/usr/lib/libboost_log-mt-a32.so.1.81.0         0755 0 0
+file /usr/lib/libboost_log_setup-mt-a32.so.1.81.0   initramfs/usr/lib/libboost_log_setup-mt-a32.so.1.81.0   0755 0 0
+
+dir /sbin 0755 0 0
+file /sbin/dropbear     initramfs/sbin/dropbear     0755 0 0
+file /sbin/dbclient     initramfs/sbin/dbclient     0755 0 0
+file /sbin/scp          initramfs/sbin/scp          0755 0 0
+file /sbin/fdisk        initramfs/sbin/fdisk        0755 0 0
+file /sbin/sfdisk       initramfs/sbin/sfdisk       0755 0 0
+file /sbin/badblocks    initramfs/sbin/badblocks    0755 0 0
+file /sbin/e2fsck       initramfs/sbin/e2fsck       0755 0 0
+slink /sbin/fsck.ext2   /sbin/e2fsck                0777 0 0
+slink /sbin/fsck.ext3   /sbin/e2fsck                0777 0 0
+slink /sbin/fsck.ext4   /sbin/e2fsck                0777 0 0
+file /sbin/mke2fs       initramfs/sbin/mke2fs       0755 0 0
+slink /sbin/mkfs.ext2   /sbin/mke2fs                0777 0 0
+slink /sbin/mkfs.ext3   /sbin/mke2fs                0777 0 0
+slink /sbin/mkfs.ext4   /sbin/mke2fs                0777 0 0
+file /sbin/resize2fs    initramfs/sbin/resize2fs    0755 0 0
+file /sbin/tune2fs      initramfs/sbin/tune2fs      0755 0 0
+
+dir /bin                                            0755 0 0
+file /bin/busybox   initramfs/bin/busybox           0755 0 0
+slink /bin/init     /bin/busybox                    0777 0 0
+slink /init         /bin/busybox                    0777 0 0
+slink /bin/update_image.sh  /etc/update_image.sh    0777 0 0
+
+dir /usr/bin 0755 0 0
+dir /usr/sbin 0755 0 0
+dir /usr/share 0755 0 0
+dir /usr/share/fonts 0755 0 0
+dir /usr/share/fontconfig 0755 0 0
+dir /usr/share/fontconfig/conf.avail 0755 0 0
+dir /usr/local 0755 0 0
+dir /usr/local/arm-linux-gnueabihf 0755 0 0
+dir /usr/local/arm-linux-gnueabihf/share 0755 0 0
+dir /usr/local/arm-linux-gnueabihf/share/alsa 0755 0 0
+file /usr/local/arm-linux-gnueabihf/share/alsa/alsa.conf initramfs/usr/local/arm-linux-gnueabihf/share/alsa/alsa.conf 0644 0 0
+
+dir /etc/fonts          0755 0 0
+dir /etc/fonts/conf.d   0755 0 0
+file /etc/fonts/fonts.conf initramfs/etc/fonts/fonts.conf 0644 0 0

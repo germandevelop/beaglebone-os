@@ -1,0 +1,277 @@
+#!/usr/bin/env sh
+
+###################################################################
+# Author        : German Mundinger
+# Date          : 2022
+###################################################################
+
+
+#**************************************************************
+# Version 1.0.0
+#**************************************************************
+readonly VERSION_MAJOR="1"
+readonly VERSION_MINOR="0"
+readonly VERSION_PATCH="0"
+#**************************************************************
+
+
+#**************************************************************
+# VARIABLES
+#**************************************************************
+readonly SOURCE_DIR=$(dirname $(realpath "$0"))
+readonly DEVICETREE_OVERLAY_DIR="/boot/dts/overlays"
+#**************************************************************
+
+
+#**************************************************************
+# NODE LIST
+#**************************************************************
+readonly NODE_B01_ID="B01"
+readonly NODE_B01_MAC_ADDRESS="60:e8:5b:0a:c6:b9"
+readonly NODE_B01_IP_ADDRESS="192.168.0.111"
+readonly NODE_B01_DEVICETREE_OVERLAY="${DEVICETREE_OVERLAY_DIR}/node-B01.dtbo"
+
+readonly NODE_DEFAULT_IP_ADDRESS="192.168.0.112"
+readonly NODE_NETMASK="255.255.255.0"
+#**************************************************************
+
+
+#**************************************************************
+# SOURCES
+#**************************************************************
+source "/etc/logger.sh"
+#**************************************************************
+
+
+#**************************************************************
+# LOCAL FUNCTIONS
+#**************************************************************
+function setup_environment
+{
+    export FONTCONFIG_PATH=/etc/fonts
+
+    return 0
+}
+
+function setup_partitions
+{
+    mkdir -p /mnt/ro_data                           1>&"$INFO_FD" 2>&"$ERROR_FD"
+    mount -v -r -t ext4 /dev/mmcblk1p3 /mnt/ro_data 1>&"$INFO_FD" 2>&"$ERROR_FD"
+
+    return 0
+}
+
+
+function detect_node_id
+{
+    info_msg "Detect Node ID"
+
+    local node_id=""
+    local mac_address=$(cat /sys/class/net/eth0/address)
+
+    if [[ "$mac_address" == "$NODE_B01_MAC_ADDRESS" ]]
+    then
+        node_id="$NODE_B01_ID"
+    fi
+
+    printf "$node_id"
+
+    return 0
+}
+
+function setup_network
+{
+    info_msg "Setup network"
+
+    local node_id="$1"
+    local ip_address="$NODE_DEFAULT_IP_ADDRESS"
+
+    if [[ "$node_id" == "$NODE_B01_ID" ]]
+    then
+        ip_address="$NODE_B01_IP_ADDRESS"
+    fi
+
+    if [[ -z "$node_id" ]]
+    then
+        warn_msg "Default IP address: ${ip_address}"
+    else
+        info_msg "IP address: ${ip_address}"
+    fi
+
+    ifconfig lo 127.0.0.1                               1>&"$INFO_FD" 2>&"$ERROR_FD"
+    ifconfig eth0 "$ip_address" netmask "$NODE_NETMASK" 1>&"$INFO_FD" 2>&"$ERROR_FD"
+
+    return 0
+}
+
+function setup_devicetree_overlay
+{
+    info_msg "Setup device-tree overlay"
+
+    local node_id="$1"
+    local devicetree_overlay=""
+
+    if [[ "$node_id" == "$NODE_B01_ID" ]]
+    then
+        devicetree_overlay="$NODE_B01_DEVICETREE_OVERLAY"
+    fi
+
+    if [[ -z "$node_id" ]]
+    then
+        warn_msg "No device-tree overlay"
+    else
+        info_msg "Device-tree overlay: \"${devicetree_overlay}\""
+
+        mkdir -p "/sys/kernel/config/device-tree/overlays/${node_id}"   1>&"$INFO_FD" 2>&"$ERROR_FD"
+
+        cat "$devicetree_overlay" > "/sys/kernel/config/device-tree/overlays/${node_id}/dtbo"
+    fi
+
+    insmod /lib/modules/ac97_bus.ko
+    insmod /lib/modules/soundcore.ko
+    insmod /lib/modules/snd.ko
+    insmod /lib/modules/snd-timer.ko
+    insmod /lib/modules/snd-pcm.ko
+    insmod /lib/modules/snd-pcm-dmaengine.ko
+    insmod /lib/modules/snd-soc-core.ko
+    insmod /lib/modules/snd-soc-ti-edma.ko
+    insmod /lib/modules/snd-soc-ti-sdma.ko
+    insmod /lib/modules/snd-soc-ti-udma.ko
+    insmod /lib/modules/snd-soc-davinci-mcasp.ko
+    insmod /lib/modules/snd-soc-simple-card-utils.ko 
+    insmod /lib/modules/snd-soc-simple-card.ko
+    insmod /lib/modules/snd-soc-hdmi-codec.ko
+
+    return 0
+}
+
+function launch_dropbear
+{
+    info_msg "Launch dropbear"
+
+    dropbear -BE -r /etc/dropbear/dropbear_rsa_host_key -r /etc/dropbear/dropbear_ecdsa_host_key -b /etc/dropbear/dropbear_banner   1>&"$INFO_FD" 2>&"$ERROR_FD"
+
+    return 0
+}
+
+function disable_leds
+{
+    info_msg "Disable LEDs"
+
+    echo none > /sys/class/leds/beaglebone:green:usr0/trigger
+    echo none > /sys/class/leds/beaglebone:green:usr1/trigger
+    echo none > /sys/class/leds/beaglebone:green:usr2/trigger
+    echo none > /sys/class/leds/beaglebone:green:usr3/trigger
+
+    echo 0 > /sys/class/leds/beaglebone:green:usr0/brightness
+    echo 0 > /sys/class/leds/beaglebone:green:usr1/brightness
+    echo 0 > /sys/class/leds/beaglebone:green:usr2/brightness
+    echo 0 > /sys/class/leds/beaglebone:green:usr3/brightness
+
+    return 0
+}
+
+function setup_cpu_frequency
+{
+    info_msg "Setup CPU frequency"
+
+    echo ondemand > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+
+    return 0
+}
+
+function clean_up
+{
+    deinit_logging
+
+    return 0
+}
+
+function print_version
+{
+    printf "\"rcS-init\" version: ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}\n"
+
+    return 0
+}
+#**************************************************************
+
+
+#**************************************************************
+# TRAPS
+#**************************************************************
+function trap_signals
+{
+    exit "$?"
+}
+
+function trap_exit
+{
+    local exit_code="$?"
+
+    disable_traps
+
+    if [[ "$exit_code" -ne "0" ]]
+    then
+        error_msg "An error occured"
+        clean_up
+    fi
+
+    return "$exit_code"
+}
+
+function enable_traps
+{
+    trap trap_signals SIGINT SIGQUIT SIGHUP SIGKILL SIGSTOP SIGTERM SIGFPE # Common signals
+    trap trap_exit EXIT
+
+    set -o errexit 	# To make your script exit when a command fails
+    set -o pipefail	# The exit status of the last command that threw a non-zero exit code is returned
+    set -o nounset 	# Exit when your script tries to use undeclared variables
+
+    return 0
+}
+
+function disable_traps
+{
+    trap - SIGINT SIGQUIT SIGHUP SIGKILL SIGSTOP SIGTERM SIGFPE # Common signals
+    trap - EXIT
+
+    set +o errexit
+    set +o pipefail
+    set +o nounset
+
+    return 0
+}
+#**************************************************************
+
+
+#**************************************************************
+# MAIN
+#**************************************************************
+print_version
+
+init_logging "$INFO_LEVEL"
+enable_traps
+
+node_id=$(detect_node_id)
+
+if [[ -z "$node_id" ]]
+then
+    warn_msg "Node ID is undetected"
+else
+    info_msg "Node ID : \"${node_id}\""
+fi
+
+setup_environment
+setup_partitions
+setup_devicetree_overlay "$node_id"
+setup_network "$node_id"
+launch_dropbear
+disable_leds
+setup_cpu_frequency
+
+disable_traps
+deinit_logging
+
+exit 0
+#**************************************************************

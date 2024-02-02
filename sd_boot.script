@@ -1,0 +1,25 @@
+###################################################################
+# Author        : German Mundinger
+# Date          : 2022
+###################################################################
+
+setenv image_config default
+
+if test $board_name = A335BNLT
+then
+    setenv image_config conf-black
+fi
+
+if test $board_name = BBBW
+then
+    setenv image_config conf-black-wireless
+fi
+
+if test $board_name = BBGW
+then
+    setenv image_config conf-green-wireless
+fi
+
+setenv bootargs console=ttyO0,115200n8 rdinit=/init.sd
+fatload mmc 0:1 ${loadaddr} os_image.itb
+bootm ${loadaddr}#${image_config}

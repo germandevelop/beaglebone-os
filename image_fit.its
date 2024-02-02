@@ -1,0 +1,94 @@
+/******************************************************************
+* Author        : German Mundinger
+* Date          : 2022
+******************************************************************/
+
+/dts-v1/;
+
+/ {
+        description = "Node FIT image";
+        #address-cells = <1>;
+
+        images {
+                kernel {
+                        description = "Node kernel";
+                        data = /incbin/("./zImage");
+                        type = "kernel";
+                        arch = "arm";
+                        os = "linux";
+                        compression = "none";
+                        load = <0x80008000>;
+                        entry = <0x80008000>;
+                        hash {
+                                algo = "crc32";
+                        };
+                };
+                fdt-black {
+                        description = "Beaglebone Black dtb";
+                        data = /incbin/("am335x-boneblack.dtb");
+                        type = "flat_dt";
+                        arch = "arm";
+                        os = "linux";
+                        compression = "none";
+                        hash {
+                                algo = "crc32";
+                        };
+                };
+                fdt-black-wireless {
+                        description = "Beaglebone Black Wireless dtb";
+                        data = /incbin/("am335x-boneblack-wireless.dtb");
+                        type = "flat_dt";
+                        arch = "arm";
+                        os = "linux";
+                        compression = "none";
+                        hash {
+                                algo = "crc32";
+                        };
+                };
+                fdt-green-wireless {
+                        description = "Beaglebone Green Wireless dtb";
+                        data = /incbin/("am335x-bonegreen-wireless.dtb");
+                        type = "flat_dt";
+                        arch = "arm";
+                        os = "linux";
+                        compression = "none";
+                        hash {
+                                algo = "crc32";
+                        };
+                };
+                initrd {
+                        description = "Node initrd";
+                        data = /incbin/("initramfs.cpio");
+                        type = "ramdisk";
+                        arch = "arm";
+                        os = "linux";
+                        compression = "none";
+                        hash {
+                                algo = "crc32";
+                        };
+                };
+
+        };
+
+        configurations {
+                default = "conf-black";
+                conf-black {
+                        description = "Black config";
+                        kernel = "kernel";
+                        ramdisk = "initrd";
+                        fdt = "fdt-black";
+                };
+                conf-black-wireless {
+                        description = "Black Wireless config";
+                        kernel = "kernel";
+                        ramdisk = "initrd";
+                        fdt = "fdt-black-wireless";
+                };
+                conf-green-wireless {
+                        description = "Green Wireless config";
+                        kernel = "kernel";
+                        ramdisk = "initrd";
+                        fdt = "fdt-green-wireless";
+                };
+        };
+};

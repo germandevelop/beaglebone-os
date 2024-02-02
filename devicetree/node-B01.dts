@@ -1,0 +1,76 @@
+/******************************************************************
+* Author        : German Mundinger
+* Date          : 2022
+******************************************************************/
+
+/dts-v1/;
+/plugin/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/pinctrl/am33xx.h>
+
+#include "node-common.dtsi"
+
+
+&{/chosen} {
+    overlays {
+        NODE_B01 = __TIMESTAMP__;
+    };
+};
+
+&i2c2 {
+	bme280@76 {
+		status = "okay";
+		compatible = "bosch,bme280";
+		reg = <0x76>;
+	};
+};
+
+&am33xx_pinmux {
+    uart1_pins: pinmux_uart1_pins {
+	    pinctrl-single,pins = <
+		    AM33XX_PADCONF(AM335X_PIN_UART1_RXD, PIN_INPUT_PULLUP, MUX_MODE0)
+		    AM33XX_PADCONF(AM335X_PIN_UART1_TXD, PIN_OUTPUT_PULLDOWN, MUX_MODE0)
+	    >;
+    };
+    power_usb_pins: pinmux_power_usb_pins {
+	    pinctrl-single,pins = <
+		    AM33XX_PADCONF(AM335X_PIN_GPMC_AD9, PIN_OUTPUT, MUX_MODE7)  // GPIO_23 (0[23])
+		    AM33XX_PADCONF(AM335X_PIN_GPMC_AD13, PIN_OUTPUT, MUX_MODE7) // GPIO_45 (1[12])
+	    >;
+    };
+    power_air_pins: pinmux_power_air_pins {
+	    pinctrl-single,pins = <
+		    AM33XX_PADCONF(AM335X_PIN_GPMC_AD14, PIN_OUTPUT, MUX_MODE7) // GPIO_46 (1[14])
+		    AM33XX_PADCONF(AM335X_PIN_GPMC_CLK, PIN_OUTPUT, MUX_MODE7)  // GPIO_65 (2[1])
+            AM33XX_PADCONF(AM335X_PIN_GPMC_CSN0, PIN_OUTPUT, MUX_MODE7) // GPIO_61 (1[29])
+	    >;
+    };
+};
+
+&uart1 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart1_pins>;
+
+	status = "okay";
+	symlink = "bone/uart/1";
+
+    air-pollution-sensor {
+        compatible = "plantower,pms7003";
+    };
+};
+
+&ocp {
+    power_usb_pinmux {
+        compatible = "bone-pinmux-helper";
+        pinctrl-0 = <&power_usb_pins>;
+        pinctrl-names = "default";
+        status = "okay";
+    };
+    power_air_pinmux {
+        compatible = "bone-pinmux-helper";
+        pinctrl-0 = <&power_air_pins>;
+        pinctrl-names = "default";
+        status = "okay";
+    };
+};
