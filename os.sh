@@ -3,6 +3,7 @@
 ###################################################################
 # Script Name   : OS builder
 # Description   : Use '--help' flag for the description
+# Compatibility	: Shell: bash. OS: Linux.
 # Author        : German Mundinger
 # Date          : 2022
 ###################################################################
@@ -867,10 +868,10 @@ exit 0
 #For the FreeRTOS thread awareness you need to add -rtos parameter to the target create script inside tcl/target/stm32f4x.cfg
 #target create $_TARGETNAME cortex_m -endian $_ENDIAN -dap $_CHIPNAME.dap -rtos FreeRTOS
 
-#LED - Forward Voltage / Current: R:2V-2.2V G:3V-3.2V B:3V-3.2V | 20mA (each color)
-
 #sudo systemctl mask brltty.path
+
 #picocom --baud 115200 /dev/ttyUSB0
+#sudo picocom --baud 115200 /dev/cuaU0
 #Exit: Ctrl+A -> Ctrl+X
 
 #arecord -t wav -r 48000 -c 2 -f S16_LE file.wav
