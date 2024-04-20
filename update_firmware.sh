@@ -25,10 +25,6 @@ readonly SOURCE_DIR=$(dirname $(realpath "$0"))
 
 GETOPT_BIN=""
 
-readonly NODE_B01_IP="192.168.100.111"
-readonly NODE_B02_IP="192.168.100.111"
-readonly NODE_T01_IP="192.168.100.111"
-
 readonly SERVER_IP="192.168.100.111"
 readonly SERVER_PORT="2398"
 
@@ -217,7 +213,7 @@ function update_firmware
 
 	local update_timeout="180"
 
-	nc -lv -w "$update_timeout" "$ADMIN_PORT" < "$firmware_file"
+	nc -lv -w "$update_timeout" "$ADMIN_PORT" < "$firmware_file"	1>&"$INFO_FD"	2>&"$ERROR_FD"
 
     return 0
 }
