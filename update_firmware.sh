@@ -25,10 +25,10 @@ readonly SOURCE_DIR=$(dirname $(realpath "$0"))
 
 GETOPT_BIN=""
 
-readonly SERVER_IP="192.168.100.111"
+readonly SERVER_IP="192.168.100.110"
 readonly SERVER_PORT="2398"
 
-readonly ADMIN_IP="192.168.100.101"
+readonly ADMIN_IP="192.168.100.100"
 readonly ADMIN_PORT="2399"
 
 readonly NODE_ADMIN_ID="0"
@@ -67,7 +67,7 @@ function print_help
     printf "\tupdate_firmware.sh [options]\n"
     printf "\n"
     printf "Options:\n"
-	printf "\t-f, --firmware        Firmware file\n"
+    printf "\t-f, --firmware        Firmware file\n"
     printf "\t-d, --debug           Enable debug output\n"
     printf "\t-l, --log FILE        File for logging\n"
     printf "\n"
@@ -88,18 +88,18 @@ function setup_platform
 {
     local os_name=$(uname)
 
-	if [[ "$os_name" == "Linux" ]]
-	then
-   		GETOPT_BIN="getopt"
+    if [[ "$os_name" == "Linux" ]]
+    then
+        GETOPT_BIN="getopt"
 
-	elif [[ "$os_name" == "FreeBSD" ]]
-	then
-   		GETOPT_BIN="/usr/local/bin/getopt"
-	else
-		printf "${BOLD_RED}ERROR${REGULAR_RED} --- Unsupported OS: ${os_name} ${RESET_COLOR}\n" 1>&2
-  		print_help
-     	exit 1
-	fi
+    elif [[ "$os_name" == "FreeBSD" ]]
+    then
+        GETOPT_BIN="/usr/local/bin/getopt"
+    else
+        printf "${BOLD_RED}ERROR${REGULAR_RED} --- Unsupported OS: ${os_name} ${RESET_COLOR}\n" 1>&2
+        print_help
+        exit 1
+    fi
 
     return 0
 }
@@ -183,11 +183,11 @@ function request_version
 {
     info_msg "Request version"
 
-	local server_timeout="3"
+    local server_timeout="3"
 
-	local request_msg="{\"src_id\":${NODE_ADMIN_ID},\"dst_id\":[${NODE_BROADCAST_ID}],\"cmd_id\":${COMMAND_REQUEST_VERSION}}\n"
+    local request_msg="{\"src_id\":${NODE_ADMIN_ID},\"dst_id\":[${NODE_BROADCAST_ID}],\"cmd_id\":${COMMAND_REQUEST_VERSION}}\n"
 
-	printf "$request_msg" | nc -v -s "$ADMIN_IP" -w "$server_timeout" "$SERVER_IP" "$SERVER_PORT"	1>&"$INFO_FD"	2>&"$ERROR_FD"
+    printf "$request_msg" | nc -v -s "$ADMIN_IP" -w "$server_timeout" "$SERVER_IP" "$SERVER_PORT"	1>&"$INFO_FD"	2>&"$ERROR_FD"
 
     return 0
 }
@@ -196,24 +196,24 @@ function update_firmware
 {
     info_msg "Update firmware"
 
-	local node_id="$1"
-	local firmware_file="$2"
+    local node_id="$1"
+    local firmware_file="$2"
 
-	if [[ ! (-f "$firmware_file") ]]
-	then
-		error_msg "Firmware file does not exist: \"${firmware_file}\""
-       	exit 1
-	fi
+    if [[ ! (-f "$firmware_file") ]]
+    then
+        error_msg "Firmware file does not exist: \"${firmware_file}\""
+        exit 1
+    fi
 
-	local server_timeout="3"
+    local server_timeout="3"
 
-	local request_msg="{\"src_id\":${NODE_ADMIN_ID},\"dst_id\":[${node_id}],\"cmd_id\":${COMMAND_UPDATE_FIRMWARE}}\n"
+    local request_msg="{\"src_id\":${NODE_ADMIN_ID},\"dst_id\":[${node_id}],\"cmd_id\":${COMMAND_UPDATE_FIRMWARE}}\n"
 
-	printf "$request_msg" | nc -v -s "$ADMIN_IP" -w "$server_timeout" "$SERVER_IP" "$SERVER_PORT"	1>&"$INFO_FD"	2>&"$ERROR_FD"
+    printf "$request_msg" | nc -v -s "$ADMIN_IP" -w "$server_timeout" "$SERVER_IP" "$SERVER_PORT"	1>&"$INFO_FD"	2>&"$ERROR_FD"
 
-	local update_timeout="180"
+    local update_timeout="180"
 
-	nc -lv -w "$update_timeout" "$ADMIN_PORT" < "$firmware_file"	1>&"$INFO_FD"	2>&"$ERROR_FD"
+    nc -lv -w "$update_timeout" "$ADMIN_PORT" < "$firmware_file"	1>&"$INFO_FD"	2>&"$ERROR_FD"
 
     return 0
 }

@@ -531,11 +531,12 @@ function create_image
     cp --verbose /usr/local/arm-linux-gnueabihf/lib/libpangomm-2.48.so.1.0.30       "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
     cp --verbose /usr/local/arm-linux-gnueabihf/lib/libasound.so.2.0.0              "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
 
-    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_chrono-mt-a32.so.1.81.0        "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
-    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_thread-mt-a32.so.1.81.0        "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
-    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_filesystem-mt-a32.so.1.81.0    "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
-    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_log-mt-a32.so.1.81.0           "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
-    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_log_setup-mt-a32.so.1.81.0     "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
+    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_chrono-mt-a32.so.1.81.0            "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
+    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_thread-mt-a32.so.1.81.0            "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
+    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_filesystem-mt-a32.so.1.81.0        "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
+    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_log-mt-a32.so.1.81.0               "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
+    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_log_setup-mt-a32.so.1.81.0         "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
+    cp --verbose /usr/local/arm-linux-gnueabihf/lib/libboost_program_options-mt-a32.so.1.81.0   "${INITRAMFS_DIR}/usr/lib"  1>&"$INFO_FD"   2>&"$ERROR_FD"
 
     cp --verbose "${BUSYBOX_DIR}/_install/bin/busybox"  "${INITRAMFS_DIR}/bin"  1>&"$INFO_FD"   2>&"$ERROR_FD"
 
@@ -868,13 +869,22 @@ exit 0
 #For the FreeRTOS thread awareness you need to add -rtos parameter to the target create script inside tcl/target/stm32f4x.cfg
 #target create $_TARGETNAME cortex_m -endian $_ENDIAN -dap $_CHIPNAME.dap -rtos FreeRTOS
 
-#sudo systemctl mask brltty.path
-
 #picocom --baud 115200 /dev/ttyUSB0
 #sudo picocom --baud 115200 /dev/cuaU0
 #Exit: Ctrl+A -> Ctrl+X
 
+#echo 7 >> /sys/class/gpio/export
+#echo out >> /sys/class/gpio/gpio7/direction
+#echo 1 >> /sys/class/gpio/gpio7/value
+
+#mount -o remount,rw /mnt/ro_data
+#mount -o remount,ro /mnt/ro_data
+
+#/tmp/bb_client_software --sound=/mnt/ro_data/sounds --image=/mnt/ro_data/images --config=/mnt/rw_data/config
+
 #arecord -t wav -r 48000 -c 2 -f S16_LE file.wav
+
+#sudo systemctl mask brltty.path
 
 #startx <program>
 #xinit <program>

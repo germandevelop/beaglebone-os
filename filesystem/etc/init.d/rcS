@@ -20,6 +20,10 @@ readonly VERSION_PATCH="0"
 #**************************************************************
 readonly SOURCE_DIR=$(dirname $(realpath "$0"))
 readonly DEVICETREE_OVERLAY_DIR="/boot/dts/overlays"
+
+readonly WATCHDOG_BIN="/etc/watchdog.sh"
+readonly SERVER_BIN="/mnt/ro_data/applications/server.sh"
+readonly CLIENT_BIN="/mnt/ro_data/applications/client.sh"
 #**************************************************************
 
 
@@ -28,10 +32,10 @@ readonly DEVICETREE_OVERLAY_DIR="/boot/dts/overlays"
 #**************************************************************
 readonly NODE_B01_ID="B01"
 readonly NODE_B01_MAC_ADDRESS="60:e8:5b:0a:c6:b9"
-readonly NODE_B01_IP_ADDRESS="192.168.0.111"
+readonly NODE_B01_IP_ADDRESS="192.168.100.110"
 readonly NODE_B01_DEVICETREE_OVERLAY="${DEVICETREE_OVERLAY_DIR}/node-B01.dtbo"
 
-readonly NODE_DEFAULT_IP_ADDRESS="192.168.0.112"
+readonly NODE_DEFAULT_IP_ADDRESS="192.168.100.200"
 readonly NODE_NETMASK="255.255.255.0"
 #**************************************************************
 
@@ -46,6 +50,13 @@ source "/etc/logger.sh"
 #**************************************************************
 # LOCAL FUNCTIONS
 #**************************************************************
+function launch_watchdog
+{
+    sh "$WATCHDOG_BIN" &
+
+    return 0
+}
+
 function setup_environment
 {
     export FONTCONFIG_PATH=/etc/fonts
@@ -57,6 +68,9 @@ function setup_partitions
 {
     mkdir -p /mnt/ro_data                           1>&"$INFO_FD" 2>&"$ERROR_FD"
     mount -v -r -t ext4 /dev/mmcblk1p3 /mnt/ro_data 1>&"$INFO_FD" 2>&"$ERROR_FD"
+
+    mkdir -p /mnt/rw_data                           1>&"$INFO_FD" 2>&"$ERROR_FD"
+    mount -v -t ext4 /dev/mmcblk1p4 /mnt/rw_data    1>&"$INFO_FD" 2>&"$ERROR_FD"
 
     return 0
 }
@@ -180,6 +194,23 @@ function setup_cpu_frequency
     return 0
 }
 
+function launch_applications
+{
+    info_msg "Launch applications"
+
+    if [[ -f "$SERVER_BIN" ]]
+    then
+        sh "$SERVER_BIN" &
+    fi
+
+    if [[ -f "$CLIENT_BIN" ]]
+    then
+        sh "$CLIENT_BIN" &
+    fi
+
+    return 0
+}
+
 function clean_up
 {
     deinit_logging
@@ -262,6 +293,7 @@ else
     info_msg "Node ID : \"${node_id}\""
 fi
 
+launch_watchdog
 setup_environment
 setup_partitions
 setup_devicetree_overlay "$node_id"
@@ -269,6 +301,7 @@ setup_network "$node_id"
 launch_dropbear
 disable_leds
 setup_cpu_frequency
+launch_applications
 
 disable_traps
 deinit_logging

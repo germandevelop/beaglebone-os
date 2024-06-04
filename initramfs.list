@@ -40,6 +40,7 @@ file /etc/emmc_flasher.sh   initramfs/etc/emmc_flasher.sh   0755 0 0
 file /etc/profile           initramfs/etc/profile           0755 0 0
 file /etc/logger.sh         initramfs/etc/logger.sh         0755 0 0
 file /etc/update_image.sh   initramfs/etc/update_image.sh   0755 0 0
+file /etc/watchdog.sh       initramfs/etc/watchdog.sh       0755 0 0
 
 dir /etc/init.d                                     0755 0 0
 file /etc/init.d/rcS    initramfs/etc/init.d/rcS    0755 0 0
@@ -152,11 +153,12 @@ slink /usr/lib/libpangomm-2.48.so.1             /usr/lib/libpangomm-2.48.so.1.0.
 file /usr/lib/libasound.so.2.0.0                initramfs/usr/lib/libasound.so.2.0.0                0755 0 0
 slink /usr/lib/libasound.so.2                   /usr/lib/libasound.so.2.0.0                         0777 0 0
 
-file /usr/lib/libboost_chrono-mt-a32.so.1.81.0      initramfs/usr/lib/libboost_chrono-mt-a32.so.1.81.0      0755 0 0
-file /usr/lib/libboost_thread-mt-a32.so.1.81.0      initramfs/usr/lib/libboost_thread-mt-a32.so.1.81.0      0755 0 0
-file /usr/lib/libboost_filesystem-mt-a32.so.1.81.0  initramfs/usr/lib/libboost_filesystem-mt-a32.so.1.81.0  0755 0 0
-file /usr/lib/libboost_log-mt-a32.so.1.81.0         initramfs/usr/lib/libboost_log-mt-a32.so.1.81.0         0755 0 0
-file /usr/lib/libboost_log_setup-mt-a32.so.1.81.0   initramfs/usr/lib/libboost_log_setup-mt-a32.so.1.81.0   0755 0 0
+file /usr/lib/libboost_chrono-mt-a32.so.1.81.0          initramfs/usr/lib/libboost_chrono-mt-a32.so.1.81.0          0755 0 0
+file /usr/lib/libboost_thread-mt-a32.so.1.81.0          initramfs/usr/lib/libboost_thread-mt-a32.so.1.81.0          0755 0 0
+file /usr/lib/libboost_filesystem-mt-a32.so.1.81.0      initramfs/usr/lib/libboost_filesystem-mt-a32.so.1.81.0      0755 0 0
+file /usr/lib/libboost_log-mt-a32.so.1.81.0             initramfs/usr/lib/libboost_log-mt-a32.so.1.81.0             0755 0 0
+file /usr/lib/libboost_log_setup-mt-a32.so.1.81.0       initramfs/usr/lib/libboost_log_setup-mt-a32.so.1.81.0       0755 0 0
+file /usr/lib/libboost_program_options-mt-a32.so.1.81.0 initramfs/usr/lib/libboost_program_options-mt-a32.so.1.81.0 0755 0 0
 
 dir /sbin 0755 0 0
 file /sbin/dropbear     initramfs/sbin/dropbear     0755 0 0
